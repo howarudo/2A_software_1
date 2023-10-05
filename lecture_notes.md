@@ -14,7 +14,7 @@ Date: 2023/10/05; [Source code](week1)
 man mkdir
 ```
 #### Basic Data Types
-- Can initialize a var name without value (int stands for integer)
+- Can call a var name without value (int stands for integer), then initialize!
 ```
 int height, width;
 ```
