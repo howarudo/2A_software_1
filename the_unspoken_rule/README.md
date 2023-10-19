@@ -5,7 +5,7 @@ Have you ever noticed that there's an **UNSPOKEN RULE** on urinals in men's rest
 
 **YEAP!** Most guys tend to avoid using urinals adjacent to occupied urinals! Might seem like a weird rule to some, but guys do this!
 
-But not just urinals in guy's restroom... We notice the same **UNSPOKEN RULE** on trains as well. We tend to avoid sitting next to another passenger and always opt to sit away from each other when possible.
+But not just urinals in guy's restroom... We notice the same **UNSPOKEN RULE** on trains as well. We tend to avoid sitting next to another passenger and always leave a space when possible.
 
 ![meme](https://qph.cf2.quoracdn.net/main-qimg-1441a7a24648221a45608cd60ca45467-lq)
 
