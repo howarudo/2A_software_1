@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <windows.h>
 
 void rules();
 void board();
@@ -9,14 +9,14 @@ void fillPossibleSquare(int);
 
 char square[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 int possibleSquare[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int moveNumber = 0;
+int moveNumber = 1;
 int valid = 0;
 int gameOver = 0;
 
 int main() {
     rules();
     while (gameOver == 0) {
-        system("clear");
+        system("cls");
         board();
         char c = getchar();
         if (c != '\n') {
@@ -34,22 +34,22 @@ int main() {
         }
         winChecker();
     }
-    system("clear");
+    system("cls");
     board();
     return 0;
 }
 
 void rules() {
     printf("    Welcome to THE UNSPOKEN RULE\n");
-    sleep(2);
+    Sleep(2);
     printf("    Players take turns and choose a spot to do their business.\n");
-    sleep(5);
+    Sleep(5);
     printf("    But there's a catch...\n");
-    sleep(2);
+    Sleep(2);
     printf("    Players can't choose adjacents of occupied spots!\n");
-    sleep(5);
+    Sleep(5);
     printf("    Have fun lads! - Howard\n");
-    sleep(4);
+    Sleep(4);
 }
 void board() {
     char title[] = "          The Unspoken Rule\n\n";
@@ -60,13 +60,13 @@ void board() {
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d's turn!\n", moveNumber%2);
+            printf("    Player %d's turn!\n", moveNumber);
         } else {
             printf("%s", title);
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d's turn!\n", moveNumber%2);
+            printf("    Player %d's turn!\n", moveNumber);
             printf("    No, uh oh! There's a better place to do your business!\n");
 
         }
@@ -75,7 +75,7 @@ void board() {
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d LOSES!!! Shame on you...\n    You have to break THE UNSPOKEN RULE %s\n", moveNumber%2, "\U00002620");
+            printf("    Player %d LOSES!!! Shame on you...\n    You have to break THE UNSPOKEN RULE %s\n", moveNumber, "\U00002620");
     }
 }
 

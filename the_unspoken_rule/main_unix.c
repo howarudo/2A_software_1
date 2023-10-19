@@ -9,7 +9,7 @@ void fillPossibleSquare(int);
 
 char square[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 int possibleSquare[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int moveNumber = 0;
+int moveNumber = 1;
 int valid = 0;
 int gameOver = 0;
 
@@ -60,13 +60,13 @@ void board() {
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d's turn!\n", moveNumber%2);
+            printf("    Player %d's turn!\n", moveNumber);
         } else {
             printf("%s", title);
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d's turn!\n", moveNumber%2);
+            printf("    Player %d's turn!\n", moveNumber);
             printf("    No, uh oh! There's a better place to do your business!\n");
 
         }
@@ -75,7 +75,7 @@ void board() {
             printf("%s", lines);
             printf("| %c | %c | %c | %c | %c | %c | %c | %c | %c | %c |\n", square[0], square[1], square[2], square[3], square[4], square[5], square[6], square[7], square[8], square[9]);
             printf("%s", lines);
-            printf("    Player %d LOSES!!! Shame on you...\n    You have to break THE UNSPOKEN RULE %s\n", moveNumber%2, "\U00002620");
+            printf("    Player %d LOSES!!! Shame on you...\n    You have to break THE UNSPOKEN RULE %s\n", moveNumber, "\U00002620");
     }
 }
 
