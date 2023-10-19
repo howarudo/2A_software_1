@@ -10,17 +10,17 @@
 Date: 2023/10/05; [Source code](week1)
 ### CLI
 - Use `man` to show options of command
-```
+```shell
 man mkdir
 ```
 ### Basic Data Types
 - Can call a var name without value (int stands for integer), then initialize!
-```
+```C
 int height, width;
 ```
 
 - Once integer is initialized, it is mutable
-```
+```C
 int height = 5;  // 宣言と同時に代入（初期化）
 height = 12;  // 値の上書き
 ```
@@ -31,14 +31,14 @@ height = 12;  // 値の上書き
 - For real numbers, there are **float** and **double**
 
 - **char** value has a max of 127, if over that, it will implicitly be changed to an **int**
-```
+```C
 char c3 = 140;
 printf("%d", c3);
 >>> -116
 ```
 
 - Variable values are stored in 64bit integer addresses and when called with `&var_name`, the leading address will be represented in base-16
-```
+```C
 printf("&p", &height);
 >>> 0x7fff138be160
 ```
@@ -57,7 +57,7 @@ Date: 2023/10/12; [Source code](week2)
 
 - Difference of `++a` and `a++`
 
-```
+```C
 int x = 0, y = 0, a = 0, b = 0;
 x = ++a;  // xは1になる
 y = b++;  // yは0になる
@@ -65,7 +65,7 @@ y = b++;  // yは0になる
 
 - Difference of casting and initiating as a literal
 
-```
+```C
 char c = 0;
 int i = (int)c;
 
@@ -80,7 +80,7 @@ f = i = 23.5f;
 
 - **Blocks**
 
-```
+```C
 {
     // 複数の文をまとめてブロックにする
     a = 3;
@@ -93,21 +93,21 @@ f = i = 23.5f;
 
 ### Array
 - Initiating arrays
-```
+```C
 int a[3];  // int型が3つ並んだ配列
 a[0] = 12;
 a[1] = 3;
 a[2] = 5;   // 最後。
 ```
 OR
-```
+```C
 int a[3] = {12, 3, 5};
 
 // さらに省略。
 int a[] = {12, 3, 5};
 ```
 For n-dimension arrays,
-```
+```C
 int mat[2][3] = {
     {32,  5, 76},
     { 1, 12,  8}
@@ -119,7 +119,7 @@ int mat[2][3] = {
 - **Break** leaves the loop. **Continue** skips the loop for one increment only
 
 - **Switch** is like an if statement
-```
+```C
 int school_year = 2;  // 大学2年生
 switch (school_year)
 {
@@ -138,7 +138,7 @@ switch (school_year)
 ```
 ### Function Semantics
 - Function **passes a copy of the value** and can't update variabes.
-```
+```C
 void plus_one(int a) {
     a++;
 }
@@ -150,7 +150,7 @@ int main () {
 }
 ```
 - **Scopes**. Variable inside block is prioritized
-```
+```C
 int a = 0; // グローバル変数
 
 void f() {
@@ -166,7 +166,7 @@ Why is `double a = 3 / 2` not `1.5`?
 - 3 and 2 are integers so 3/2 will be `1`
 
 What are values of i and f?
-```
+```C
 int i;
 float f;
 f = i = 23.5f;
@@ -176,3 +176,171 @@ f = i = 23.5f;
 Why does `a < b < c` not work?
 
 - `<` is a left bond. It will be evaluated to `(-20 < -10) < -2` then `1 < -2`
+
+## Lecture Notes 3
+
+### Strings and Characters
+In `C`, we differentiate strings and characters. Characters are singular letters and the whole thing is a string (文字列). **But both are called with `char`.**
+```C
+int main() {
+    char s[6] = "hello";
+    char s[] = "hello";
+}
+```
+Characters are stored very similarly to arrays
+![](lecture_notes_pic/string_storage.png)
+
+
+```C
+char s2[8] = "hello"; // {'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0'};
+char s3[3] = "hello";  // {'h', 'e', 'l'};
+```
+
+Just like arrays, the address of a string is the address of the first character.
+
+```C
+int a[3] = {1, 2, 3};
+printf("%p %p\n", a, &a[0]); // 同じになる。例えば 0x7fffd6711a90 0x7fffd6711a90
+```
+
+Not possible to compare Strings because using `==` will compare address instead.
+```C
+char s1[] = "abc";
+char s2[] = "abc";
+if (s1 == s2) { ... }  // 想定した挙動にならない。常に偽になる
+```
+
+### sizeof()
+sizeof returns the number of bytes. If an array is given, will multiply.
+```C
+printf("%lu\n", sizeof(char)); // 1
+printf("%lu\n", sizeof(int));  // 4
+
+int a[] = {1, 2, 3};
+printf("%lu\n", sizeof(a));  // 12
+```
+
+### Inputing an array as function
+```C
+int count_spaces(char s[]) {
+    int ct = 0;
+    for (int i = 0; s[i] != '\0'; ++i) {
+        if (s[i] == ' ') {
+            ++ct;
+        }
+    }
+    return ct;
+}
+```
+
+When doing sizeof() for strings, it will count the last `'\0'`
+```C
+char s[] = "abc";
+printf("%lu\n", sizeof(s)); // 4
+```
+
+### <string.h>
+Functions for strings
+- `strlen`: length of string. Without `'\0'`
+- `strcpy`: copy a string
+- `strcat`: concatenate a string
+- `strcmp`: compare string
+
+```C
+int main() {
+    char s1[] = "abc";
+    unsigned long len = strlen(s1);  // 長さを取得
+    printf("sizeof(s1): %lu, strlen(s1): %lu\n", sizeof(s1), len);  // sizeof: 4, strlen: 3
+
+    char s2[10];  // 十分に長く確保
+    strcpy(s2, "hello");
+    printf("%s\n", s2);  // 文字列をコピー。 s2 = "hello" 的なもの。
+    printf("sizeof(s2): %lu, strlen(s2): %lu\n", sizeof(s2), strlen(s2)); // sizeof: 10, strlen: 5
+
+    char s3[10] = "hoge";  // 十分に長く確保
+    printf("sizeof(s3): %lu, strlen(s3): %lu\n", sizeof(s3), strlen(s3)); // sizeof: 10, strlen: 4
+    strcat(s3, "fuga");  // 文字列を結合する。stringのconcatenate
+    printf("%s\n", s3); // "hogefuga"
+    printf("sizeof(s3): %lu, strlen(s3): %lu\n", sizeof(s3), strlen(s3)); // sizeof: 10, strlen: 8
+
+    char s4[] = "abc";
+    char s5[] = "abcd";
+    int cmp = strcmp(s4, s5); // 文字列の比較。s4 == s5的なもの。二つの文字列の辞書順に応じて、正か0か負になる
+    printf("%d\n", cmp);  // ここでは-100
+}
+
+```
+### Quiz
+1. How to get an int from the string?
+```C
+int n = c - '0'
+```
+2. How to get the lowercase of a given character?
+```C
+c = c - 'A' + 'a';
+```
+3. `0`と、`'0'`と、`'\0'`と、`"0"`と、`"\0"`の違い
+    - Integer
+    - ASCII that represents 0
+    - ASCII that represents NULL
+    - String
+    - String
+
+### Transforming types
+In C, types are transformed automatically.
+
+Types are converted automatiaccaly when
+1. Handling operations
+2. Subtitution `int a = b`
+3. When input does not matched defined in function
+4. When output does not matched defined outside function
+
+```C
+char c = 12;     // 8 bit
+short s = 34;    // 16 bit
+int i = 56;      // 32 bit
+float f = 1.0;   // 32 bit
+double d = 2.0;  // 64 bit
+i = i + c;       // i + cで、cがintに変換される
+i = i + s;       // i + sで、sがintに変換される
+f = f + i;       // f + iで、iがfloatに変換される
+d = d + f;       // d + fで、fがdoubleに計算される
+```
+### Cast
+```C
+float quotient;
+int dividend = 3, divisor = 2;
+
+// キャスト無し
+quotient = dividend / divisor; // 1.000
+
+// キャストあり
+quotient = (float) dividend / divisor;  // 1.5000
+```
+
+### Input and Outputs
+Use `getchar()` and `putchar()` to take input and output
+
+```C
+#include <stdio.h>
+
+int main() {
+    int c = getchar();
+    while (c != EOF) {
+        putchar('/');  // 複写プログラムに加え、文字の間にスラッシュをいれる
+        putchar(c);
+        c = getchar();
+    }
+}
+```
+Use a `|` to combine shell commands
+```shell
+$ echo abcd | ./a.out
+/a/b/c/d/
+```
+
+### Bash
+Use `grep` to search for a word in ls by combining with ls
+```Bash
+ls -al | grep mkdir
+```
