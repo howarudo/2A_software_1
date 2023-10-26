@@ -177,7 +177,7 @@ Why does `a < b < c` not work?
 
 - `<` is a left bond. It will be evaluated to `(-20 < -10) < -2` then `1 < -2`
 
-## Lecture Notes 3
+## Lecture 3
 
 ### Strings and Characters
 In `C`, we differentiate strings and characters. Characters are singular letters and the whole thing is a string (文字列). **But both are called with `char`.**
@@ -343,4 +343,148 @@ $ echo abcd | ./a.out
 Use `grep` to search for a word in ls by combining with ls
 ```Bash
 ls -al | grep mkdir
+```
+
+## Lecture 4
+
+### DEFINE!
+We can define a constant variable using `#define N 5`. No matter where it is, all `N` will be substituted as 5.
+```C
+#define N 5
+
+int main() {
+    for (int i = 0; i < N ...)
+}
+```
+
+### Pointers
+Think of pointers as a variable that holds another variable's address. The tricky part of pointers in C is that we use `*` to initiate pointers and also `*` to access the value of pointer.
+
+```C
+// We have to state what is the varaible's type when initiating pointer
+double a = 10.0;
+double *p;
+p = &a;
+```
+
+Becareful that `*` just means pointer for the next variable
+
+```C
+int* p1, p2, p3; => p1 is pointer of int, p2 and p3 are ints
+```
+
+Make two varaibles point at the same memory space using pointers
+
+```C
+int a = 10;
+int *p;
+p = &a;  // p は aを指す
+
+int *q; // もう一個ポインタを宣言
+q = p;  // q = &a と同じ意味
+```
+![](https://eeic-software1.github.io/2023/img/4_pt2.png)
+
+### Pointers as input of functions
+In C, we could only get one return per function so instead, we could pass in pointers and change value pointed by pointers for multiple inputs.
+
+```C
+void decompose(double x, long *int_part, double *frac_part) {
+    *int_part = (long) x;
+    *frac_part = x - *int_part;
+}
+
+int main() {
+    long n;
+    double d;
+    decompose(3.14, &n, &d)
+}
+```
+
+When using the function decompose, we are passing a copy of each address. However, we can access the "real" value through the address, so we can edit the actual values.
+
+### Returning a pointer
+We can also create functions that return pointers.
+```C
+int *min(int *a, int *b) {
+    if (*a < *b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+int main() {
+    int *ret;
+    ret = min(&num1, *num2);
+}
+```
+The function above will return the address of minimum value.
+
+Btw, if you intitiate local varaible inside function, you cannot return the address of it.
+
+
+### Quiz
+```C
+int a = 10;
+int *p = &a;
+```
+What do these expressions mean?
+- `*&a`
+
+`a`
+- `&*a`
+
+error.
+- `*&p`
+
+p
+- `&*p`
+
+a's address.
+
+### Pointer and arrays
+```C
+int a[3] = {12, 3, 5};
+int *p = &a[0];  // &(a[0])のこと
+int *p =&a; // Still same
+*p = 2; // a become {2, 3, 5}
+```
+
+When incrementing address of array, we will go to the next elements
+
+![](https://eeic-software1.github.io/2023/img/4_pt5.png)
+
+The above is equivalent to,
+
+```C
+q = p + sizeof(int) * 2;
+```
+
+Why is the code below okay?
+```C
+for (int *p = &a[0]; p < &a[N]; ++p) { ... }
+```
+Because, although `int a[N]` is not defined, the address `&a[N]` is defined! Recall that in memory space, after the last element, there will be `!0`
+
+![](https://eeic-software1.github.io/2023/img/4_pt7.png)
+
+From the picture above, we realise that a pointer pointing at the start of an array is very similar to the just the array variable. But there are inherent differences
+
+
+We can't equate it to a `NULL`
+```C
+int a[] = {1, 2, 3, 4, 5}, *p;
+p = a;
+int *r = NULL;
+p = r;  // 出来る（ポインタにポインタを代入）
+a = r;  // 出来ない（aは固定されている配列アドレスなので、別のものを代入できない）
+```
+
+Different `sizeof()`
+```C
+int a[] = {1, 2, 3, 4, 5}, *p;
+p = a;
+printf("sizeof(p): %lu\n", sizeof(p)); // sizeof(p): 8
+printf("sizeof(a): %lu\n", sizeof(a)); // sizeof(a): 20
 ```
