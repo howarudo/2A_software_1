@@ -357,6 +357,18 @@ int main() {
 }
 ```
 
+### const
+
+When passing a pointer to a function, we have access to the actual value and edit it. But this could lead to errors. `const` allows us to access but not change it
+```C
+int strlen3(const char *s) {
+    const char *p = s;
+    while (*s) {
+        s++;
+    }
+    return s - p;
+}
+```
 ### Pointers
 Think of pointers as a variable that holds another variable's address. The tricky part of pointers in C is that we use `*` to initiate pointers and also `*` to access the value of pointer.
 
@@ -488,3 +500,45 @@ p = a;
 printf("sizeof(p): %lu\n", sizeof(p)); // sizeof(p): 8
 printf("sizeof(a): %lu\n", sizeof(a)); // sizeof(a): 20
 ```
+
+- 変数宣言時のint a[]とint *aは意味が違う。配列か。ポインタか。
+- 関数引数のint a[]とint *aは同じで、どちらもint *a
+
+### Strings and pointers
+
+```C
+char s[] = "hoge";
+char *p = s;
+```
+
+**POINT!** The `sizeof` of char is `1` so `p+1` will equate be literally 1 + p.
+
+```C
+int strlen3(const char *s) {
+    const char *p = s;
+    while (*s) {
+        s++;
+    }
+    return s - p;
+}
+```
+Here, we are changing s but the `s` referred from `p` is kept constant. Which means that even if we change the value of the pointer s, the value seen from `p` is same.
+
+### Initiating a string as a literal.....
+
+```C
+char amsg[] = "abc";
+char *pmsg = "abc";
+printf("%s %s\n", amsg, pmsg);  // abc abc
+```
+- Top: 4 char memory spaces to hold 'a', ... '\0'
+- Bottom: Somewhere in program, literal "abc" is stored. Can be accessed, cannot be editted
+
+```C
+amsg = NULL;  // ダメ
+pmsg = NULL;  // OK
+amsg[0] = 'A';  // OK
+pmsg[0] = 'A';  // ダメ
+```
+
+If we create two pointers pointing to the same literal, it will be stored in the same
