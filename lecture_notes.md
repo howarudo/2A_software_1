@@ -800,6 +800,173 @@ p = arr;      // p と p + 1 の間の値（アドレス）の差は12（つま�
 ということです。
 
 ## Lecture 6
-
+Cでは、普段コピーできないことが多いが、そもそも「コピーできる」ものを構造体と呼ぶようにしている
 ### 構造体 (Structure)
 Making a structure called **point**
+```C
+struct point {
+    int x;
+    int y;
+};
+
+int main () {
+    struct point pt;
+    pt.x = 10;
+    pt.y = 30;
+    // or 
+    struct point pt = {10, 30};
+    // or
+    struct point pt = {.x = 10, .y = 30};
+    // pt = {.x = 10, .y = 30}; is bad but
+    pt = (struct point){.x = 10, .y = 30};
+    printf("%d %d\n", pt.x, pt.y);  // 10 30
+}
+```
+
+`x` and `y` are called **members**. 
+
+Using **tyepdef**
+
+```C
+typedef struct point Point;
+// or 
+typedef struct point {
+    int x;
+    int y;
+} Point;
+
+int main() {
+    Point pt = {.x = 10, .y = 30};
+}
+```
+
+### Structures and Functions
+```C
+void print_point(Point pt) {
+    printf("pt: (%d, %d)\n", pt.x, pt.y);
+}
+```
+This lets us use structure `Point`.
+`print_point(structure point)` also works.
+
+### Structures and Lists
+
+```C
+Point points[3] = {
+    {.x = 3, .y = 4},
+    {.x = 5, .y = 6},
+    {.x = 7, .y = 8}
+};
+for (int i = 0; i < 3; ++i) {
+    print_point(points[i]);
+}
+```
+Can just write like a normal type
+
+### Structures and Pointers
+- Can have a pointer pointing at the structure 
+
+- Have to use `strcpy` to assign a string to **member**
+```C
+#define MAX_LEN 6
+
+typedef struct str_by_arr {
+    char s[MAX_LEN + 1];            
+} StrByArr;
+
+int main() {
+    StrByArr x1 = {.s = "hoge"};
+    StrByArr x2 = x1;
+    strcpy(x1.s, "fuga");
+}
+```
+
+### Deep Copy vs Shallow Copy
+
+**Deep copy**: Copy the value to memory
+
+**Shallow Copy**: Use a pointer to reference
+
+```C
+char buff[] = "hoge";
+StrByPtr y1 = {.s = buff};
+StrByPtr y2 = y1;
+strcpy(buff, "fuga");
+printf("y1.s: %s\n", y1.s);  // y1.s: fuga
+printf("y2.s: %s\n", y2.s);  // y2.s: fuga
+```
+Both of them will print `fuga` because `f2` will point to the same memory space as `f1`. But right now, 
+
+![](https://eeic-software1.github.io/2023/img/6_str2.png)
+
+### Bit Operations
+AND, OR, XOR
+```C
+unsigned char a = 3; // 00000011
+unsigned char b = 6; // 00000110
+unsigned char x;
+
+// ビットごとのAND
+x = a & b;           
+print_bit_uchar(x);  // 00000010
+printf("%u\n", x);   // 2
+
+// ビットごとのOR
+x = a | b;           
+print_bit_uchar(x);  // 00000111
+printf("%u\n", x);   // 7
+
+// ビットごとのXOR
+x = a ^ b;      
+print_bit_uchar(x);  // 00000101
+printf("%u\n", x);   // 5
+```
+
+LEFT SHIFT, RIGHT SHIFT, COMPLEMENT
+```C
+unsigned char a = 35; // 00100011
+unsigned char x;
+
+// 左シフト
+x = a << 2;  // 右側は0詰めされる
+print_bit_uchar(x);  // 10001100
+printf("%u\n", x);   // 140
+
+// 右シフト
+x = a >> 2;  // unsignedの場合、左側は0詰めされる
+print_bit_uchar(x);  // 00001000
+printf("%u\n", x);   // 8
+
+// 1の補数（ビット反転）
+x = ~a;  // 単項演算子
+print_bit_uchar(x);  // 11011100
+printf("%u\n", x);   // 220
+```
+
+Can also do
+`a <<= 2;  // a = a << 2 の略`
+
+### `unsigned` vs `signed`
+For unsigned, the first digit will be a minus when changing to base-10
+```C
+unsigned char uch = 193;
+char ch = -63;
+printf("uch: %d, ch: %d\n", uch, ch);  // uch: 193, ch: -63
+print_bit_uchar(uch);  // 11000001
+print_bit_uchar(ch); // 11000001
+```
+
+So, for unsigned chars,
+
+最小値：一番上の桁が1で、それ以外が0
+`0b10000000 = -128`
+
+最大値：一番上の桁が0で、それ以外が1
+`0b01111111 = 127`
+
+```C
+a &= ~(1 << i); 
+```
+What does this do?
+- Take the third digit and make it a `0`
+
